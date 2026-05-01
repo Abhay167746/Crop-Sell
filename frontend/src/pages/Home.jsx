@@ -1,632 +1,405 @@
 
 
-// import { motion } from "framer-motion";
-// import { useContext } from "react";
-// import { LanguageContext } from "../context/LanguageContext";
-// import { Link } from "react-router-dom";
-// import bgImage from "../assets/bb1.avif";
 
-// function Home() {
-//   const { language } = useContext(LanguageContext);
-
-//   const text = {
-//     en: {
-//       titleTop: "Smart Crop Selling",
-//       titleBottom: "Powered by AI",
-//       desc:
-//         "An AI assistant helping farmers find the right buyers, better prices, and smarter selling decisions.",
-//       ctaPrimary: "Talk to AI",
-//       ctaSecondary: "Farmer Registration",
-//     },
-//   };
-
-//   const t = text[language] || text.en;
-
-//   return (
-//     <div className="bg-white">
-
-//       {/* HERO */}
-//       <section
-//         className="relative min-h-screen flex items-center justify-center text-center text-white overflow-hidden"
-//         style={{
-//           backgroundImage: `url(${bgImage})`,
-//           backgroundSize: "cover",
-//           backgroundPosition: "center",
-//         }}
-//       >
-//         {/* Overlay Gradient */}
-//         <div className="absolute inset-0 bg-gradient-to-br from-black/70 via-black/50 to-green-900/40"></div>
-
-//         {/* Glow Effect */}
-//         <div className="absolute w-[500px] h-[500px] bg-green-500/20 blur-[120px] rounded-full top-[-100px] left-[-100px]"></div>
-
-//         <motion.div
-//           initial={{ opacity: 0, y: 60 }}
-//           animate={{ opacity: 1, y: 0 }}
-//           transition={{ duration: 0.8 }}
-//           className="relative z-10 px-6 max-w-4xl"
-//         >
-//           <h1 className="text-5xl md:text-7xl font-extrabold leading-tight">
-//             {t.titleTop}
-//           </h1>
-
-//           <h2 className="text-5xl md:text-7xl font-extrabold text-green-400 mt-2">
-//             {t.titleBottom}
-//           </h2>
-
-//           <p className="mt-6 text-lg text-gray-200 max-w-2xl mx-auto">
-//             {t.desc}
-//           </p>
-
-//           {/* CTA Buttons */}
-//           <div className="mt-10 flex flex-col sm:flex-row gap-4 justify-center">
-
-//             <Link
-//               to="/login"
-//               className="bg-green-600 px-10 py-3 rounded-full text-lg font-semibold hover:bg-green-700 transition transform hover:scale-105 shadow-xl"
-//             >
-//               🌾 {t.ctaPrimary}
-//             </Link>
-
-//             <Link
-//               to="/signup"
-//               className="bg-white/20 border border-white px-10 py-3 rounded-full text-lg font-semibold hover:bg-white/30 backdrop-blur-md transition"
-//             >
-//               {t.ctaSecondary}
-//             </Link>
-
-//           </div>
-
-//           {/* Trust Badge */}
-//           <p className="mt-6 text-sm text-gray-300">
-//             Trusted by farmers across Uttarakhand 🌾
-//           </p>
-//         </motion.div>
-//       </section>
-
-//       {/* FEATURES */}
-//       <section className="py-24 bg-gradient-to-b from-white to-green-50">
-//         <div className="max-w-6xl mx-auto px-6 grid md:grid-cols-3 gap-10">
-
-//           {[
-//             {
-//               title: "Farmer Friendly",
-//               desc: "Simple and easy to use, even for non-tech users.",
-//               icon: "🌱",
-//             },
-//             {
-//               title: "Better Profit",
-//               desc: "Sell directly and avoid middlemen losses.",
-//               icon: "💰",
-//             },
-//             {
-//               title: "AI Guidance",
-//               desc: "Smart suggestions for selling crops efficiently.",
-//               icon: "🤖",
-//             },
-//           ].map((f, i) => (
-//             <motion.div
-//               key={i}
-//               whileHover={{ scale: 1.08 }}
-//               initial={{ opacity: 0, y: 40 }}
-//               whileInView={{ opacity: 1, y: 0 }}
-//               transition={{ delay: i * 0.2 }}
-//               className="bg-white rounded-2xl p-8 shadow-xl text-center border hover:shadow-2xl transition"
-//             >
-//               <div className="text-5xl mb-4">{f.icon}</div>
-//               <h3 className="text-xl font-bold text-green-800">
-//                 {f.title}
-//               </h3>
-//               <p className="text-gray-600 mt-2">{f.desc}</p>
-//             </motion.div>
-//           ))}
-
-//         </div>
-//       </section>
-
-//       {/* CTA SECTION */}
-//       <section className="py-24 bg-gradient-to-r from-green-700 to-green-900 text-white text-center relative overflow-hidden">
-
-//         {/* Background glow */}
-//         <div className="absolute w-[400px] h-[400px] bg-green-400/20 blur-[100px] rounded-full top-[-100px] right-[-100px]"></div>
-
-//         <motion.div
-//           initial={{ opacity: 0 }}
-//           whileInView={{ opacity: 1 }}
-//           className="max-w-3xl mx-auto px-6 relative z-10"
-//         >
-//           <h2 className="text-4xl font-bold mb-4">
-//             Start Selling Smarter 🚀
-//           </h2>
-
-//           <p className="mb-6 text-gray-200">
-//             Join AgroAI and maximize your crop profits with AI-powered insights.
-//           </p>
-
-//           <Link
-//             to="/signup"
-//             className="bg-white text-green-700 px-10 py-3 rounded-full font-semibold hover:bg-gray-100 transition transform hover:scale-105"
-//           >
-//             Get Started
-//           </Link>
-//         </motion.div>
-//       </section>
-
-//     </div>
-//   );
-// }
-
-// export default Home;
-
-
-
-import { motion, useScroll, useTransform } from "framer-motion";
-import { useContext, useRef } from "react";
-import { LanguageContext } from "../context/LanguageContext";
+import { motion } from "framer-motion";
+import { useState } from "react";
 import { Link } from "react-router-dom";
-import bgImage from "../assets/bb1.avif";
+import collegeLogo from "../assets/cot.jpg";
 
-// ── Floating particle blob ──────────────────────────────────────────────────
-function Blob({ className }) {
-  return (
-    <motion.div
-      animate={{ scale: [1, 1.15, 1], rotate: [0, 8, -6, 0] }}
-      transition={{ duration: 14, repeat: Infinity, ease: "easeInOut" }}
-      className={`absolute rounded-full blur-3xl opacity-30 pointer-events-none ${className}`}
-    />
-  );
-}
+const CONTENT = {
+  en: {
+    tagline: "Your crop selling helper",
+    subtitle: "Get today's mandi price, find buyers, and sell at the best rate — in Hindi or English.",
+    cta: "Start Chatting",
+    ctaSub: "Register Free",
+    switchLang: "हिंदी में देखें",
+    section1Title: "What can AgroAI do for you?",
+    features: [
+      { icon: "💰", title: "Today's Mandi Price", desc: "Know the latest price of tomato, potato, onion and more in Haldwani mandi right now." },
+      { icon: "🛒", title: "Find Buyers", desc: "We'll tell you who is buying your crop today and where to go to get the best price." },
+      { icon: "⏰", title: "Best Time to Sell", desc: "Not sure when to sell? AgroAI will tell you the right time so you earn more." },
+      { icon: "🗣️", title: "Hindi & English", desc: "Talk to AgroAI in Hindi, Roman Hindi, or English — whatever is easy for you." },
+      { icon: "🚫", title: "No Middleman", desc: "Sell directly. No broker cutting your profit. You keep what you earn." },
+      { icon: "📱", title: "Works on Any Phone", desc: "Works on any mobile browser. No app download needed." },
+    ],
+    howTitle: "How to use AgroAI?",
+    steps: [
+      { n: "1", t: "Open the chatbot", d: "Click 'Start Chatting' and open AgroAI assistant." },
+      { n: "2", t: "Type your crop", d: "Tell us what crop you have and how many kilos. Example: 'Tamatar 50 kg'" },
+      { n: "3", t: "Get the answer", d: "AgroAI will instantly show you price, buyer, and the best advice." },
+      { n: "4", t: "Sell and earn more", d: "Go to the right mandi at the right time and earn a better price." },
+    ],
+    cropsTitle: "Crops we help with",
+    crops: [
+      { e: "🍅", n: "Tomato" }, { e: "🧅", n: "Onion" }, { e: "🥔", n: "Potato" },
+      { e: "🥦", n: "Cauliflower" }, { e: "🥕", n: "Carrot" }, { e: "🌽", n: "Maize" },
+      { e: "🌾", n: "Wheat" }, { e: "🫘", n: "Pulses" }, { e: "🍎", n: "Apple" },
+      { e: "🫚", n: "Mustard" }, { e: "🌿", n: "Coriander" }, { e: "🍐", n: "Pear" },
+    ],
+    quoteText: "Earlier the broker used to take 30%. Now I go directly to the mandi. AgroAI told me everything — where to go, when to go, and at what price to sell.",
+    quoteName: "Ramesh Singh",
+    quoteSub: "Farmer, Haldwani · Tomato Grower",
+    finalTitle: "Your crops deserve the best price.",
+    finalDesc: "Hundreds of farmers in Uttarakhand are already using AgroAI. Join them today — it's free.",
+    finalCta: "Start for Free",
+    footer: "© 2025 AgroAI · Made for farmers of Uttarakhand 🌾",
+    madeFor: "Made for farmers of Haldwani · Kathgodam · Tikonia · Rudrapur",
+    liveBadge: "Live for Haldwani farmers",
+  },
+  hi: {
+    tagline: "आपकी फसल बेचने का सहायक",
+    subtitle: "आज का मंडी भाव जानें, खरीदार ढूंढें और सबसे अच्छे दाम पर बेचें — हिंदी या अंग्रेज़ी में।",
+    cta: "चैट शुरू करें",
+    ctaSub: "मुफ़्त रजिस्टर करें",
+    switchLang: "View in English",
+    section1Title: "AgroAI आपके लिए क्या कर सकता है?",
+    features: [
+      { icon: "💰", title: "आज का मंडी भाव", desc: "टमाटर, आलू, प्याज और बाकी सब्ज़ियों का हल्द्वानी मंडी का ताज़ा भाव अभी जानें।" },
+      { icon: "🛒", title: "खरीदार खोजें", desc: "हम बताएंगे आज कौन आपकी फसल खरीद रहा है और कहाँ जाने पर सबसे अच्छा दाम मिलेगा।" },
+      { icon: "⏰", title: "बेचने का सही समय", desc: "कब बेचें यह नहीं पता? AgroAI सही समय बताएगा ताकि आप ज़्यादा कमा सकें।" },
+      { icon: "🗣️", title: "हिंदी और अंग्रेज़ी", desc: "AgroAI से हिंदी, रोमन हिंदी या अंग्रेज़ी में बात करें — जो आसान लगे।" },
+      { icon: "🚫", title: "बिचौलिया नहीं", desc: "सीधे बेचें। कोई दलाल आपका मुनाफ़ा नहीं काटेगा। जो कमाओ वो पूरा आपका।" },
+      { icon: "📱", title: "किसी भी फोन पर", desc: "किसी भी मोबाइल ब्राउज़र पर चलता है। कोई ऐप डाउनलोड करने की ज़रूरत नहीं।" },
+    ],
+    howTitle: "AgroAI कैसे इस्तेमाल करें?",
+    steps: [
+      { n: "1", t: "चैटबॉट खोलें", d: "'चैट शुरू करें' पर क्लिक करें और AgroAI सहायक खोलें।" },
+      { n: "2", t: "अपनी फसल बताएं", d: "हमें बताएं आपके पास कौन सी फसल है और कितने किलो। जैसे: 'टमाटर 50 किलो'" },
+      { n: "3", t: "जवाब पाएं", d: "AgroAI तुरंत आपको भाव, खरीदार और सबसे अच्छी सलाह दिखाएगा।" },
+      { n: "4", t: "बेचें और ज़्यादा कमाएं", d: "सही मंडी पर सही समय जाएं और बेहतर दाम पाएं।" },
+    ],
+    cropsTitle: "हम किन फसलों में मदद करते हैं",
+    crops: [
+      { e: "🍅", n: "टमाटर" }, { e: "🧅", n: "प्याज" }, { e: "🥔", n: "आलू" },
+      { e: "🥦", n: "फूलगोभी" }, { e: "🥕", n: "गाजर" }, { e: "🌽", n: "मक्का" },
+      { e: "🌾", n: "गेहूँ" }, { e: "🫘", n: "दाल" }, { e: "🍎", n: "सेब" },
+      { e: "🫚", n: "सरसों" }, { e: "🌿", n: "धनिया" }, { e: "🍐", n: "नाशपाती" },
+    ],
+    quoteText: "पहले बिचौलिया 30% ले जाता था। अब सीधे मंडी जाता हूँ। AgroAI ने सब बता दिया — कहाँ जाना है, कब जाना है, कितने में बेचना है।",
+    quoteName: "रमेश सिंह",
+    quoteSub: "किसान, हल्द्वानी · टमाटर उगाने वाले",
+    finalTitle: "आपकी फसल को सबसे अच्छा दाम मिलना चाहिए।",
+    finalDesc: "उत्तराखंड के सैकड़ों किसान पहले से AgroAI इस्तेमाल कर रहे हैं। आज ही जुड़ें — बिल्कुल मुफ़्त।",
+    finalCta: "मुफ़्त शुरू करें",
+    footer: "© 2025 AgroAI · उत्तराखंड के किसानों के लिए बना 🌾",
+    madeFor: "हल्द्वानी · काठगोदाम · टिकोनिया · रुद्रपुर के किसानों के लिए",
+    liveBadge: "हल्द्वानी किसानों के लिए लाइव",
+  },
+};
 
-// ── Stat counter card ───────────────────────────────────────────────────────
-function StatCard({ value, label, delay }) {
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 30 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      transition={{ delay, duration: 0.6 }}
-      className="flex flex-col items-center"
-    >
-      <span
-        className="text-4xl md:text-5xl font-black"
-        style={{ fontFamily: "'Playfair Display', serif", color: "#BBEC6C" }}
-      >
-        {value}
-      </span>
-      <span className="text-sm text-green-200 mt-1 tracking-widest uppercase">
-        {label}
-      </span>
-    </motion.div>
-  );
-}
+const fadeUp = (delay = 0) => ({
+  initial: { opacity: 0, y: 24 },
+  whileInView: { opacity: 1, y: 0 },
+  viewport: { once: true },
+  transition: { duration: 0.55, delay, ease: [0.22, 1, 0.36, 1] },
+});
 
-// ── Feature card ────────────────────────────────────────────────────────────
-function FeatureCard({ icon, title, desc, index }) {
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 50 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      transition={{ delay: index * 0.15, duration: 0.6 }}
-      whileHover={{ y: -8, scale: 1.02 }}
-      className="relative group rounded-3xl p-8 overflow-hidden cursor-default"
-      style={{
-        background: "linear-gradient(135deg, #ffffff08, #ffffff04)",
-        border: "1px solid rgba(187,236,108,0.15)",
-        backdropFilter: "blur(12px)",
-      }}
-    >
-      {/* hover glow */}
-      <div
-        className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-3xl"
-        style={{ background: "radial-gradient(circle at 50% 0%, rgba(187,236,108,0.08) 0%, transparent 70%)" }}
-      />
-      <div
-        className="w-14 h-14 rounded-2xl flex items-center justify-center text-3xl mb-5"
-        style={{ background: "rgba(187,236,108,0.12)", border: "1px solid rgba(187,236,108,0.2)" }}
-      >
-        {icon}
-      </div>
-      <h3 className="text-xl font-bold text-white mb-2" style={{ fontFamily: "'Playfair Display', serif" }}>
-        {title}
-      </h3>
-      <p className="text-green-300 leading-relaxed text-sm">{desc}</p>
-    </motion.div>
-  );
-}
-
-// ── Step card ───────────────────────────────────────────────────────────────
-function StepCard({ number, title, desc, index }) {
-  return (
-    <motion.div
-      initial={{ opacity: 0, x: index % 2 === 0 ? -40 : 40 }}
-      whileInView={{ opacity: 1, x: 0 }}
-      transition={{ delay: index * 0.12, duration: 0.6 }}
-      className="flex gap-5 items-start"
-    >
-      <div
-        className="flex-shrink-0 w-12 h-12 rounded-full flex items-center justify-center font-black text-lg"
-        style={{ background: "#BBEC6C", color: "#0D2B0E", fontFamily: "'Playfair Display', serif" }}
-      >
-        {number}
-      </div>
-      <div>
-        <h4 className="font-bold text-white text-lg mb-1">{title}</h4>
-        <p className="text-green-300 text-sm leading-relaxed">{desc}</p>
-      </div>
-    </motion.div>
-  );
-}
-
-// ── MAIN HOME ───────────────────────────────────────────────────────────────
 export default function Home() {
-  const { language } = useContext(LanguageContext);
-  const heroRef = useRef(null);
-  const { scrollYProgress } = useScroll({ target: heroRef, offset: ["start start", "end start"] });
-  const heroY = useTransform(scrollYProgress, [0, 1], ["0%", "30%"]);
-  const heroOpacity = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
+  const [lang, setLang] = useState("hi");
+  const c = CONTENT[lang];
 
-  const features = [
-    { icon: "🌱", title: "Farmer First", desc: "Designed for real farmers — simple Hindi & English chat that anyone can use, no tech skills needed." },
-    { icon: "💰", title: "Maximum Profit", desc: "Skip the middlemen. Get live mandi prices and find direct buyers who pay fair rates." },
-    { icon: "🤖", title: "AI-Powered Brain", desc: "LLaMA AI understands your crop, quantity, and location to give hyper-local advice instantly." },
-    { icon: "📍", title: "Hyper-Local", desc: "Built specifically for Haldwani and Uttarakhand — real mandis, real buyers, real prices." },
-    { icon: "⚡", title: "Instant Answers", desc: "No waiting, no forms. Ask a question, get a structured answer in seconds." },
-    { icon: "🌐", title: "Hindi + English", desc: "Talk in your language. AgroAI understands Roman Hindi, Devanagari, and English fluently." },
-  ];
-
-  const steps = [
-    { number: "01", title: "Tell us your crop", desc: "Type your crop name and quantity in Hindi or English — however you're comfortable." },
-    { number: "02", title: "AI fetches live data", desc: "AgroAI pulls live mandi prices and location-specific buyer information instantly." },
-    { number: "03", title: "Get your selling plan", desc: "Receive a clear breakdown: best buyers, today's price, best time, and pro tips." },
-    { number: "04", title: "Sell smarter & earn more", desc: "Go to market with confidence, eliminate middlemen, and maximize your income." },
-  ];
+  /* ── shared text colors for white bg ── */
+  const T = {
+    heading:  "#1a2e1a",
+    body:     "#374151",
+    muted:    "#6b7280",
+    green:    "#15803d",
+    card:     "#f0fdf4",
+    cardBorder: "#bbf7d0",
+    sectionBg: "#f8fffe",
+  };
 
   return (
-    <div className="pt-20"
-     style={{ background: "#070F07", fontFamily: "'DM Sans', sans-serif", color: "#fff" }}>
+    <div style={{ background: "#ffffff", minHeight: "100vh", fontFamily: "'Noto Sans', 'Segoe UI', sans-serif", color: T.heading }}>
 
-      {/* Google Fonts */}
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@400;500;600&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;600;700&family=Noto+Sans+Devanagari:wght@400;600;700&display=swap');
+        * { box-sizing: border-box; margin: 0; padding: 0; }
         html { scroll-behavior: smooth; }
-        ::selection { background: #BBEC6C; color: #0D2B0E; }
+        ::selection { background: #4ade80; color: #0f1a0c; }
       `}</style>
 
-      {/* ═══════════════════════════════════════
-          HERO SECTION
-      ══════════════════════════════════════ */}
-      <section
-        ref={heroRef}
-        className="relative min-h-screen flex items-center justify-center overflow-hidden"
-      >
-        {/* Parallax BG */}
-        <motion.div
-          style={{ y: heroY }}
-          className="absolute inset-0 z-0"
-        >
-          <div
-            className="absolute inset-0"
-            style={{
-              backgroundImage: `url(${bgImage})`,
-              backgroundSize: "cover",
-              backgroundPosition: "center",
-              filter: "brightness(0.25) saturate(0.6)",
-            }}
-          />
-          <div className="absolute inset-0" style={{ background: "linear-gradient(to bottom, rgba(7,15,7,0.3) 0%, rgba(7,15,7,0.95) 100%)" }} />
-        </motion.div>
-
-        {/* Animated blobs */}
-        <Blob className="w-[600px] h-[600px] bg-green-500 top-[-200px] left-[-200px]" />
-        <Blob className="w-[400px] h-[400px] bg-lime-400 bottom-[-100px] right-[-100px]" />
-
-        {/* Grid texture overlay */}
-        <div
-          className="absolute inset-0 z-0 opacity-5"
-          style={{
-            backgroundImage: "linear-gradient(rgba(187,236,108,0.4) 1px, transparent 1px), linear-gradient(90deg, rgba(187,236,108,0.4) 1px, transparent 1px)",
-            backgroundSize: "60px 60px",
-          }}
-        />
-
-        <motion.div
-          style={{ opacity: heroOpacity }}
-          className="relative z-10 max-w-5xl mx-auto px-6 text-center"
-        >
-          {/* badge */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.5 }}
-            className="inline-flex items-center gap-2 rounded-full px-4 py-1.5 mb-8 text-sm font-medium"
-            style={{ background: "rgba(187,236,108,0.12)", border: "1px solid rgba(187,236,108,0.3)", color: "#BBEC6C" }}
-          >
-            <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-lime-400 opacity-75" />
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-lime-400" />
+      {/* ══ COLLEGE BANNER — 10px margin left/right ══ */}
+      <div style={{ padding: "16px 10px 0" }}>
+        <div style={{
+          background: "maroon",
+          borderRadius: 14, overflow: "hidden",
+          border: "1px solid rgba(255,255,255,0.08)",
+          boxShadow: "0 4px 24px rgba(0,0,0,0.18)",
+        }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 20, padding: "18px 24px", flexWrap: "wrap" }}>
+            <div style={{ position: "relative", flexShrink: 0 }}>
+              <img src={collegeLogo} alt="College Logo" style={{ width: 64, height: 64, borderRadius: "50%", objectFit: "cover", border: "2px solid rgba(255,255,255,0.2)" }} />
+            </div>
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <div style={{ fontSize: 17, fontWeight: 700, color: "#fff" }}>प्रौद्योगिकी महाविद्यालय</div>
+              <div style={{ fontSize: 12.5, color: "rgba(255,200,150,0.9)", fontStyle: "italic", marginTop: 2 }}>College of Technology, Pantnagar</div>
+              <div style={{ fontSize: 11.5, color: "rgba(255,255,255,0.55)", marginTop: 2 }}>G.B. Pant University of Agriculture &amp; Technology</div>
+            </div>
+            <div style={{ width: 1, height: 52, background: "rgba(255,255,255,0.15)", flexShrink: 0 }} />
+            <div style={{ textAlign: "right", flexShrink: 0 }}>
+              <div style={{ fontSize: 22, fontWeight: 800, color: "#ffd700", fontStyle: "italic" }}>AgroAI</div>
+              <div style={{ fontSize: 10, color: "rgba(255,255,255,0.55)", textTransform: "uppercase", letterSpacing: "0.8px" }}>Intelligent Crop Market Assistant</div>
+            </div>
+          </div>
+          <div style={{ background: "rgba(0,0,0,0.2)", borderTop: "1px solid rgba(255,255,255,0.07)", padding: "8px 24px", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 6 }}>
+            <span style={{ fontSize: 11.5, fontStyle: "italic", color: "rgba(255,255,200,0.7)" }}>
+              "Empowering farmers of Uttarakhand with AI-driven market intelligence"
             </span>
-            Now live for Haldwani farmers
-          </motion.div>
+            <span style={{ display: "flex", alignItems: "center", gap: 5, fontSize: 11, color: "#4ade80", fontWeight: 600 }}>
+              <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#4ade80", display: "inline-block", boxShadow: "0 0 6px #4ade80" }} />
+              Live Data Active
+            </span>
+          </div>
+        </div>
+      </div>
 
-          {/* headline */}
-          <motion.h1
-            initial={{ opacity: 0, y: 40 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.1 }}
-            className="text-6xl md:text-8xl font-black leading-none tracking-tight mb-4"
-            style={{ fontFamily: "'Playfair Display', serif" }}
-          >
-            Sell Your Crops
-            <br />
-            {/* <span style={{ color: "#BBEC6C" }}>10× Smarter.</span> */}
-          </motion.h1>
-
-          <motion.p
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.3 }}
-            className="text-lg md:text-xl text-green-200 max-w-2xl mx-auto mt-6 leading-relaxed"
-          >
-            AgroAI is your AI-powered mandi advisor — giving farmers in Uttarakhand live prices,
-            direct buyers, and expert guidance in Hindi or English. No middlemen. No confusion.
-          </motion.p>
-
-          {/* CTAs */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.5 }}
-            className="flex flex-col sm:flex-row gap-4 justify-center mt-10"
-          >
-            <Link
-              to="/login"
-              className="group relative overflow-hidden rounded-full px-10 py-4 text-base font-semibold transition-all"
-              style={{ background: "#BBEC6C", color: "#0D2B0E" }}
-            >
-              <span className="relative z-10 flex items-center gap-2 justify-center">
-                🌾 Talk to AgroAI
-                <motion.span
-                  animate={{ x: [0, 4, 0] }}
-                  transition={{ duration: 1.5, repeat: Infinity }}
-                >→</motion.span>
-              </span>
-              <div
-                className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                style={{ background: "#d4f77a" }}
-              />
-            </Link>
-
-            <Link
-              to="/signup"
-              className="rounded-full px-10 py-4 text-base font-semibold transition-all"
-              style={{
-                background: "transparent",
-                border: "1px solid rgba(187,236,108,0.4)",
-                color: "#BBEC6C",
+      {/* ══ NAVBAR MENU — 10px margin left/right ══ */}
+      <div style={{ margin: "12px 10px 0" }}>
+        <div style={{
+          background: "#f0fdf4",
+          border: "1px solid #bbf7d0",
+          borderRadius: 12,
+          padding: "10px 20px",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          flexWrap: "wrap",
+          gap: 10,
+        }}>
+          <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
+            {[
+              { to: "/", label: lang === "hi" ? "होम" : "Home" },
+              { to: "/about", label: lang === "hi" ? "हमारे बारे में" : "About" },
+              { to: "/login", label: lang === "hi" ? "लॉगिन" : "Login" },
+            ].map(l => (
+              <Link key={l.to} to={l.to} style={{
+                padding: "6px 14px", borderRadius: 20,
+                border: "1px solid #bbf7d0", color: T.green,
+                fontSize: 13, fontWeight: 500, textDecoration: "none",
+                transition: "all 0.18s", background: "transparent",
               }}
-              onMouseEnter={e => e.currentTarget.style.background = "rgba(187,236,108,0.08)"}
-              onMouseLeave={e => e.currentTarget.style.background = "transparent"}
-            >
-              Register as Farmer
+                onMouseEnter={e => { e.currentTarget.style.background = "#dcfce7"; }}
+                onMouseLeave={e => { e.currentTarget.style.background = "transparent"; }}
+              >
+                {l.label}
+              </Link>
+            ))}
+            <Link to="/signup" style={{
+              padding: "6px 16px", borderRadius: 20,
+              background: "#16a34a", color: "#fff",
+              fontSize: 13, fontWeight: 700, textDecoration: "none",
+            }}>
+              🌾 {lang === "hi" ? "शुरू करें" : "Get Started"}
             </Link>
-          </motion.div>
-
-          {/* Proof line */}
-          <motion.p
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.8 }}
-            className="mt-8 text-xs tracking-widest uppercase text-green-500"
+          </div>
+          <button
+            onClick={() => setLang(l => l === "hi" ? "en" : "hi")}
+            style={{
+              padding: "6px 14px", borderRadius: 20,
+              border: "1px solid #bbf7d0", background: "#dcfce7",
+              color: T.green, fontSize: 12.5, fontWeight: 600,
+              cursor: "pointer", display: "flex", alignItems: "center", gap: 5,
+            }}
           >
-            Built for farmers of Haldwani · Kathgodam · Tikonia · Rudrapur
-          </motion.p>
+            🌐 {c.switchLang}
+          </button>
+        </div>
+      </div>
+
+      {/* ══ HERO ══ */}
+      <section style={{ maxWidth: 900, margin: "0 auto", padding: "48px 20px 36px", textAlign: "center" }}>
+        <motion.div {...fadeUp(0)} style={{ display: "inline-flex", alignItems: "center", gap: 7, background: "rgba(22,163,74,0.08)", border: "1px solid rgba(22,163,74,0.25)", borderRadius: 20, padding: "5px 14px", fontSize: 12.5, color: T.green, fontWeight: 600, marginBottom: 20 }}>
+          <span style={{ width: 7, height: 7, borderRadius: "50%", background: "#16a34a", display: "inline-block", boxShadow: "0 0 6px #16a34a" }} />
+          {c.liveBadge}
         </motion.div>
 
-        {/* Scroll indicator */}
-        <motion.div
-          animate={{ y: [0, 10, 0] }}
-          transition={{ duration: 2, repeat: Infinity }}
-          className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 opacity-50"
-        >
-          <span className="text-xs text-green-400 tracking-widest uppercase">Scroll</span>
-          <div className="w-[1px] h-10" style={{ background: "linear-gradient(to bottom, #BBEC6C, transparent)" }} />
+        <motion.h1 {...fadeUp(0.1)} style={{ fontSize: "clamp(26px, 5vw, 40px)", fontWeight: 700, color: T.heading, lineHeight: 1.35, marginBottom: 14 }}>
+          {c.tagline}
+        </motion.h1>
+
+        <motion.p {...fadeUp(0.2)} style={{ fontSize: "clamp(14px, 2.5vw, 16px)", color: T.muted, lineHeight: 1.7, maxWidth: 580, margin: "0 auto 28px" }}>
+          {c.subtitle}
+        </motion.p>
+
+        <motion.div {...fadeUp(0.3)} style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap" }}>
+          <Link to="/login" style={{
+            padding: "12px 28px", borderRadius: 10,
+            background: "#16a34a", color: "#fff",
+            fontSize: 15, fontWeight: 700, textDecoration: "none",
+            display: "inline-flex", alignItems: "center", gap: 7,
+            boxShadow: "0 4px 14px rgba(22,163,74,0.3)",
+          }}>
+            🌾 {c.cta}
+          </Link>
+          <Link to="/signup" style={{
+            padding: "12px 28px", borderRadius: 10,
+            border: "1px solid #bbf7d0", color: T.green,
+            fontSize: 15, fontWeight: 600, textDecoration: "none",
+            display: "inline-flex", alignItems: "center", gap: 7,
+          }}>
+            {c.ctaSub}
+          </Link>
         </motion.div>
+
+        <motion.p {...fadeUp(0.4)} style={{ marginTop: 18, fontSize: 11.5, color: T.muted, letterSpacing: "0.5px" }}>
+          {c.madeFor}
+        </motion.p>
       </section>
 
-  
-
-      {/* ═══════════════════════════════════════
-          FEATURES
-      ══════════════════════════════════════ */}
-      <section className="py-28 max-w-6xl mx-auto px-6">
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          className="text-center mb-16"
-        >
-          <p className="text-xs uppercase tracking-widest text-lime-400 mb-3">Why AgroAI</p>
-          <h2
-            className="text-4xl md:text-6xl font-black"
-            style={{ fontFamily: "'Playfair Display', serif" }}
-          >
-            Everything a farmer<br />
-            <span style={{ color: "#BBEC6C" }}>needs to win.</span>
-          </h2>
-        </motion.div>
-        <div className="grid md:grid-cols-3 gap-6">
-          {features.map((f, i) => <FeatureCard key={i} {...f} index={i} />)}
+      {/* ══ FEATURES ══ */}
+      <section style={{ maxWidth: 900, margin: "0 auto", padding: "20px 20px 40px" }}>
+        <motion.h2 {...fadeUp()} style={{ fontSize: "clamp(18px, 3vw, 24px)", fontWeight: 700, color: T.heading, marginBottom: 20, textAlign: "center" }}>
+          {c.section1Title}
+        </motion.h2>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(240px, 1fr))", gap: 12 }}>
+          {c.features.map((f, i) => (
+            <motion.div key={i} {...fadeUp(i * 0.07)}
+              style={{ background: T.card, border: "1px solid #bbf7d0", borderRadius: 12, padding: "18px 16px" }}
+            >
+              <div style={{ fontSize: 26, marginBottom: 8 }}>{f.icon}</div>
+              <div style={{ fontSize: 14.5, fontWeight: 700, color: T.heading, marginBottom: 5 }}>{f.title}</div>
+              <div style={{ fontSize: 13, color: T.muted, lineHeight: 1.6 }}>{f.desc}</div>
+            </motion.div>
+          ))}
         </div>
       </section>
 
-      {/* ═══════════════════════════════════════
-          HOW IT WORKS
-      ══════════════════════════════════════ */}
-      <section
-        className="py-28 relative overflow-hidden"
-        style={{ background: "linear-gradient(135deg, #0B1F0B 0%, #0D2B0E 100%)" }}
-      >
-        <Blob className="w-[500px] h-[500px] bg-green-700 top-[-200px] right-[-100px] opacity-20" />
-        <div className="max-w-6xl mx-auto px-6 grid md:grid-cols-2 gap-16 items-center relative z-10">
-          {/* Left: text */}
-          <div>
-            <motion.p
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              className="text-xs uppercase tracking-widest text-lime-400 mb-3"
-            >
-              How It Works
-            </motion.p>
-            <motion.h2
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              className="text-4xl md:text-5xl font-black mb-8"
-              style={{ fontFamily: "'Playfair Display', serif" }}
-            >
-              From question<br />
-              <span style={{ color: "#BBEC6C" }}>to profit</span> in seconds.
-            </motion.h2>
-            <div className="space-y-8">
-              {steps.map((s, i) => <StepCard key={i} {...s} index={i} />)}
-            </div>
-          </div>
-
-          {/* Right: mock chat UI */}
-          <motion.div
-            initial={{ opacity: 0, x: 60 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8 }}
-            className="rounded-3xl overflow-hidden shadow-2xl"
-            style={{ border: "1px solid rgba(187,236,108,0.15)" }}
-          >
-            {/* chat header */}
-            <div
-              className="px-5 py-4 flex items-center gap-3"
-              style={{ background: "rgba(187,236,108,0.08)", borderBottom: "1px solid rgba(187,236,108,0.1)" }}
-            >
-              <div className="w-8 h-8 rounded-full flex items-center justify-center text-lg" style={{ background: "#BBEC6C" }}>🌾</div>
-              <div>
-                <p className="font-semibold text-white text-sm">AgroAI</p>
-                <p className="text-xs text-lime-400">● Online</p>
-              </div>
-            </div>
-            {/* messages */}
-            <div className="p-5 space-y-4" style={{ background: "#0A170A" }}>
-              {/* user msg */}
-              <div className="flex justify-end">
-                <div
-                  className="rounded-2xl rounded-tr-sm px-4 py-3 text-sm max-w-[80%]"
-                  style={{ background: "#BBEC6C", color: "#0D2B0E", fontWeight: 500 }}
-                >
-                  Haldwani me tamatar 80 kg kahan bechun?
-                </div>
-              </div>
-              {/* ai response */}
-              <div className="flex justify-start">
-                <div
-                  className="rounded-2xl rounded-tl-sm px-4 py-4 text-sm max-w-[90%] leading-relaxed space-y-2"
-                  style={{ background: "rgba(187,236,108,0.07)", border: "1px solid rgba(187,236,108,0.12)", color: "#d1fae5" }}
-                >
-                  <p>📍 <strong className="text-white">कहाँ बेचें</strong><br />टिकोनिया बाज़ार या नवीन मंडी हल्द्वानी जाएँ</p>
-                  <p>💰 <strong className="text-white">आज का भाव</strong><br />₹18–₹26 प्रति किलो (आज का रेट)</p>
-                  <p>⏰ <strong className="text-white">सही समय</strong><br />सुबह ५–९ बजे — सबसे ज़्यादा माँग होती है</p>
-                  <p>🚜 <strong className="text-white">ज़रूरी सलाह</strong><br />बेचने से पहले पके और कच्चे टमाटर अलग करें</p>
-                </div>
-              </div>
-            </div>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* ═══════════════════════════════════════
-          TESTIMONIAL / QUOTE
-      ══════════════════════════════════════ */}
-      <section className="py-28 max-w-4xl mx-auto px-6 text-center">
-        <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          whileInView={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.7 }}
-        >
-          <p className="text-5xl mb-6" style={{ color: "rgba(187,236,108,0.3)" }}>"</p>
-          <blockquote
-            className="text-2xl md:text-3xl font-bold leading-snug mb-8"
-            style={{ fontFamily: "'Playfair Display', serif", color: "#e8fce8" }}
-          >
-            Pehle middleman 30% le jaata tha. Ab seedha mandi jaata hoon.
-            AgroAI ne sab bata diya — kahan jaana hai, kab jaana hai, kitne mein bechna hai.
-          </blockquote>
-          <div className="flex items-center justify-center gap-3">
-            <div
-              className="w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm"
-              style={{ background: "#BBEC6C", color: "#0D2B0E" }}
-            >
-              RS
-            </div>
-            <div className="text-left">
-              <p className="text-white text-sm font-semibold">Ramesh Singh</p>
-              <p className="text-green-500 text-xs">Farmer, Haldwani · Tomato grower</p>
-            </div>
-          </div>
-        </motion.div>
-      </section>
-
-      {/* ═══════════════════════════════════════
-          FINAL CTA
-      ══════════════════════════════════════ */}
-      <section className="py-28 relative overflow-hidden" style={{ background: "#0D2B0E" }}>
-        <Blob className="w-[700px] h-[700px] bg-lime-600 top-[-300px] left-[50%] -translate-x-1/2 opacity-20" />
-        <div className="relative z-10 max-w-3xl mx-auto px-6 text-center">
-          <motion.h2
-            initial={{ opacity: 0, y: 40 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7 }}
-            className="text-5xl md:text-7xl font-black mb-6"
-            style={{ fontFamily: "'Playfair Display', serif" }}
-          >
-            Your crops deserve
-            <br />
-            <span style={{ color: "#BBEC6C" }}>the best price.</span>
+      {/* ══ CROPS ══ */}
+      <section style={{ background: T.sectionBg, padding: "36px 20px", borderTop: "1px solid #e5e7eb", borderBottom: "1px solid #e5e7eb" }}>
+        <div style={{ maxWidth: 900, margin: "0 auto" }}>
+          <motion.h2 {...fadeUp()} style={{ fontSize: "clamp(18px, 3vw, 22px)", fontWeight: 700, color: T.heading, marginBottom: 18, textAlign: "center" }}>
+            {c.cropsTitle}
           </motion.h2>
-          <motion.p
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            transition={{ delay: 0.2 }}
-            className="text-green-300 text-lg mb-10"
-          >
-            Join hundreds of farmers already using AgroAI to sell smarter across Uttarakhand.
-          </motion.p>
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3 }}
-            className="flex flex-col sm:flex-row gap-4 justify-center"
-          >
-            <Link
-              to="/signup"
-              className="rounded-full px-12 py-4 text-base font-bold transition-all duration-300"
-              style={{ background: "#BBEC6C", color: "#0D2B0E" }}
-              onMouseEnter={e => e.currentTarget.style.background = "#d4f77a"}
-              onMouseLeave={e => e.currentTarget.style.background = "#BBEC6C"}
+          <div style={{ display: "flex", flexWrap: "wrap", gap: 10, justifyContent: "center" }}>
+            {c.crops.map((cr, i) => (
+              <motion.div key={i} {...fadeUp(i * 0.04)}
+                style={{
+                  background: "#fff", border: "1px solid #bbf7d0",
+                  borderRadius: 10, padding: "9px 16px",
+                  display: "flex", alignItems: "center", gap: 8,
+                  fontSize: 13.5, color: T.body, fontWeight: 500,
+                  cursor: "default", boxShadow: "0 1px 4px rgba(0,0,0,0.05)",
+                }}
+              >
+                <span style={{ fontSize: 20 }}>{cr.e}</span>
+                {cr.n}
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ══ HOW TO USE ══ */}
+      <section style={{ maxWidth: 900, margin: "0 auto", padding: "40px 20px" }}>
+        <motion.h2 {...fadeUp()} style={{ fontSize: "clamp(18px, 3vw, 22px)", fontWeight: 700, color: T.heading, marginBottom: 24, textAlign: "center" }}>
+          {c.howTitle}
+        </motion.h2>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))", gap: 14 }}>
+          {c.steps.map((s, i) => (
+            <motion.div key={i} {...fadeUp(i * 0.1)}
+              style={{
+                background: T.card, border: "1px solid #bbf7d0",
+                borderRadius: 12, padding: "18px 16px",
+                display: "flex", flexDirection: "column", gap: 10,
+              }}
             >
-              🚀 Get Started Free
-            </Link>
-            <Link
-              to="/login"
-              className="rounded-full px-12 py-4 text-base font-semibold transition-all"
-              style={{ border: "1px solid rgba(187,236,108,0.3)", color: "#BBEC6C" }}
-              onMouseEnter={e => e.currentTarget.style.background = "rgba(187,236,108,0.08)"}
-              onMouseLeave={e => e.currentTarget.style.background = "transparent"}
-            >
-              Already registered? Login
-            </Link>
+              <div style={{
+                width: 36, height: 36, borderRadius: "50%",
+                background: "#16a34a", color: "#fff",
+                display: "flex", alignItems: "center", justifyContent: "center",
+                fontSize: 16, fontWeight: 800, flexShrink: 0,
+              }}>{s.n}</div>
+              <div style={{ fontSize: 14.5, fontWeight: 700, color: T.heading }}>{s.t}</div>
+              <div style={{ fontSize: 12.5, color: T.muted, lineHeight: 1.6 }}>{s.d}</div>
+            </motion.div>
+          ))}
+        </div>
+      </section>
+
+      {/* ══ CHAT DEMO ══ */}
+      <section style={{ background: T.sectionBg, padding: "36px 20px", borderTop: "1px solid #e5e7eb", borderBottom: "1px solid #e5e7eb" }}>
+        <div style={{ maxWidth: 520, margin: "0 auto" }}>
+          <motion.h2 {...fadeUp()} style={{ fontSize: "clamp(16px, 3vw, 20px)", fontWeight: 700, color: T.heading, marginBottom: 18, textAlign: "center" }}>
+            {lang === "hi" ? "ऐसे काम करता है AgroAI 👇" : "See how AgroAI works 👇"}
+          </motion.h2>
+          <motion.div {...fadeUp(0.1)} style={{ background: "#fff", border: "1px solid #bbf7d0", borderRadius: 14, overflow: "hidden", boxShadow: "0 4px 20px rgba(0,0,0,0.07)" }}>
+            <div style={{ background: T.card, borderBottom: "1px solid #bbf7d0", padding: "12px 16px", display: "flex", alignItems: "center", gap: 10 }}>
+              <div style={{ width: 34, height: 34, borderRadius: "50%", background: "#16a34a", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 16 }}>🌾</div>
+              <div>
+                <div style={{ fontSize: 13.5, fontWeight: 700, color: T.green }}>AgroAI</div>
+                <div style={{ fontSize: 11, color: "#16a34a" }}>● Online</div>
+              </div>
+            </div>
+            <div style={{ padding: "16px", display: "flex", flexDirection: "column", gap: 12 }}>
+              <div style={{ display: "flex", justifyContent: "flex-end" }}>
+                <div style={{ background: "#16a34a", color: "#fff", borderRadius: "12px 12px 3px 12px", padding: "10px 14px", fontSize: 13.5, maxWidth: "80%" }}>
+                  {lang === "hi" ? "हल्द्वानी में टमाटर 80 किलो कहाँ बेचूँ?" : "Haldwani me tamatar 80 kg kahan bechun?"}
+                </div>
+              </div>
+              <div style={{ display: "flex", justifyContent: "flex-start" }}>
+                <div style={{ background: T.card, border: "1px solid #bbf7d0", borderRadius: "12px 12px 12px 3px", padding: "12px 14px", fontSize: 13, color: T.body, maxWidth: "90%", lineHeight: 1.65 }}>
+                  <div style={{ marginBottom: 6 }}>📍 <strong style={{ color: T.green }}>{lang === "hi" ? "कहाँ जाएं" : "Where to go"}</strong><br />
+                    <span style={{ color: T.muted }}>{lang === "hi" ? "टिकोनिया बाज़ार या नवीन मंडी हल्द्वानी" : "Tikonia Bazaar or Naveen Mandi Haldwani"}</span>
+                  </div>
+                  <div style={{ marginBottom: 6 }}>💰 <strong style={{ color: T.green }}>{lang === "hi" ? "आज का भाव" : "Today's price"}</strong><br />
+                    <span style={{ color: T.muted }}>{lang === "hi" ? "₹18–₹26 प्रति किलो" : "₹18–₹26 per kg"}</span>
+                  </div>
+                  <div style={{ marginBottom: 6 }}>⏰ <strong style={{ color: T.green }}>{lang === "hi" ? "सही समय" : "Best time"}</strong><br />
+                    <span style={{ color: T.muted }}>{lang === "hi" ? "सुबह 5–9 बजे — सबसे ज़्यादा माँग" : "5–9 AM — highest demand"}</span>
+                  </div>
+                  <div>🚜 <strong style={{ color: T.green }}>{lang === "hi" ? "ज़रूरी सलाह" : "Pro tip"}</strong><br />
+                    <span style={{ color: T.muted }}>{lang === "hi" ? "पके और कच्चे टमाटर अलग करके ले जाएं" : "Sort ripe and raw tomatoes before selling"}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
           </motion.div>
         </div>
       </section>
 
-      {/* FOOTER */}
-      <footer
-        className="py-2 text-center text-xs text-green-700 tracking-widest uppercase"
-        style={{ borderTop: "1px solid rgba(187,236,108,0.08)" }}
-      >
-        © 2025 AgroAI · Built for farmers of Uttarakhand 🌾
+      {/* ══ QUOTE ══ */}
+      <section style={{ maxWidth: 700, margin: "0 auto", padding: "40px 20px", textAlign: "center" }}>
+        <motion.div {...fadeUp()} style={{ background: T.card, border: "1px solid #bbf7d0", borderRadius: 14, padding: "28px 24px" }}>
+          <div style={{ fontSize: 32, color: "rgba(22,163,74,0.2)", marginBottom: 10 }}>"</div>
+          <blockquote style={{ fontSize: "clamp(14px, 2.5vw, 16px)", color: T.body, lineHeight: 1.8, marginBottom: 18, fontStyle: "italic" }}>
+            {c.quoteText}
+          </blockquote>
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 10 }}>
+            <div style={{ width: 38, height: 38, borderRadius: "50%", background: "#16a34a", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 700, fontSize: 14, color: "#fff" }}>
+              {lang === "hi" ? "र" : "RS"}
+            </div>
+            <div style={{ textAlign: "left" }}>
+              <div style={{ fontSize: 13.5, fontWeight: 700, color: T.heading }}>{c.quoteName}</div>
+              <div style={{ fontSize: 11.5, color: T.muted }}>{c.quoteSub}</div>
+            </div>
+          </div>
+        </motion.div>
+      </section>
+
+      {/* ══ FINAL CTA ══ */}
+      <section style={{ background: T.sectionBg, padding: "44px 20px", textAlign: "center", borderTop: "1px solid #e5e7eb" }}>
+        <motion.div {...fadeUp()} style={{ maxWidth: 600, margin: "0 auto" }}>
+          <h2 style={{ fontSize: "clamp(20px, 4vw, 28px)", fontWeight: 700, color: T.heading, marginBottom: 12, lineHeight: 1.4 }}>
+            {c.finalTitle}
+          </h2>
+          <p style={{ fontSize: 14.5, color: T.muted, marginBottom: 24, lineHeight: 1.7 }}>
+            {c.finalDesc}
+          </p>
+          <Link to="/signup" style={{
+            display: "inline-block", padding: "13px 36px",
+            background: "#16a34a", color: "#fff",
+            borderRadius: 10, fontSize: 15, fontWeight: 700,
+            textDecoration: "none", boxShadow: "0 4px 14px rgba(22,163,74,0.3)",
+          }}>
+            🚀 {c.finalCta}
+          </Link>
+        </motion.div>
+      </section>
+
+      {/* ══ FOOTER ══ */}
+      <footer style={{ borderTop: "1px solid #e5e7eb", padding: "16px 20px", textAlign: "center", fontSize: 11.5, color: T.muted }}>
+        {c.footer}
       </footer>
 
     </div>
