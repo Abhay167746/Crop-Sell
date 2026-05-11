@@ -393,7 +393,7 @@ function Signup() {
       {/* ── COLLEGE BANNER ── */}
       <div style={{ padding: "16px 10px 0" }}>
         <div style={{
-          background: "linear-gradient(135deg, #8b1a1a 0%, #6b1414 40%, #4a1010 100%)",
+          background: "maroon",
           borderRadius: 14, overflow: "hidden",
           border: "1px solid rgba(255,255,255,0.08)",
           boxShadow: "0 4px 24px rgba(0,0,0,0.18)",
@@ -538,13 +538,7 @@ function Signup() {
             </Link>
           </p>
 
-          {/* Benefits */}
-          <div style={{ marginTop: 20, padding: "12px 14px", background: "#f0fdf4", border: "1px solid #bbf7d0", borderRadius: 10 }}>
-            <div style={{ fontSize: 11.5, fontWeight: 700, color: "#15803d", marginBottom: 6 }}>रजिस्ट्रेशन के फायदे:</div>
-            {["💬 Chat history saved", "🌾 Personalized advice", "📊 Price alerts", "🔒 Secure account"].map((b, i) => (
-              <div key={i} style={{ fontSize: 11.5, color: "#374151", marginBottom: 3 }}>{b}</div>
-            ))}
-          </div>
+          
 
         </motion.div>
       </div>

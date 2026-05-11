@@ -4,7 +4,7 @@ import jwt from "jsonwebtoken";
 
 /* REGISTER */
 export const registerUser = async (req, res) => {
-  const { email, password } = req.body;
+  const { name,email, password } = req.body;//added
 
   try {
     const userExists = await User.findOne({ email });
@@ -16,6 +16,7 @@ export const registerUser = async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, 10);
 
     await User.create({
+      name,//added
       email,
       password: hashedPassword,
     });
@@ -50,7 +51,9 @@ export const loginUser = async (req, res) => {
       { expiresIn: "1d" }
     );
 
-    res.json({ token });
+    res.json({ token,
+      name: user.name // added
+     });
 
   } catch (err) {
     res.status(500).json({ message: "Server Error" });

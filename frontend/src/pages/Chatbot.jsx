@@ -3006,6 +3006,642 @@
 // `;
 
 
+// import { useState, useRef, useEffect, useCallback } from "react";
+// import { useNavigate } from "react-router-dom";
+// import { motion, AnimatePresence } from "framer-motion";
+// import collegeLogo from "../assets/cot.jpg";
+
+// const CROP_TOPICS = [
+//   { icon: "🍅", label: "टमाटर (Tomato)" },
+//   { icon: "🧅", label: "प्याज (Onion)" },
+//   { icon: "🥔", label: "आलू (Potato)" },
+//   { icon: "🥦", label: "फूलगोभी (Cauliflower)" },
+//   { icon: "🥕", label: "गाजर (Carrot)" },
+// ];
+
+// function BotMessage({ text }) {
+//   return (
+//     <div className="bot-content">
+//       {text.split("\n").map((line, i) => {
+//         const t = line.trim();
+//         if (!t) return <div key={i} style={{ height: 5 }} />;
+//         if (/^━+$/.test(t)) return <div key={i} className="msg-divider" />;
+//         const sec = t.match(/^(📍|💰|⏰|🚜|📈|🚚|🌾|✅|⚠️)\s*(.*)/);
+//         if (sec) return <div key={i} className="msg-section"><span>{sec[1]}</span><strong>{sec[2]}</strong></div>;
+//         if (t.startsWith("•")) return <div key={i} className="msg-bullet"><span className="bdot" /><span>{t.slice(1).trim()}</span></div>;
+//         return <p key={i} className="msg-text">{t}</p>;
+//       })}
+//     </div>
+//   );
+// }
+
+// function TypingIndicator() {
+//   return (
+//     <div style={{ display: "flex", alignItems: "flex-end", gap: 8 }}>
+//       <div className="bot-av">🌾</div>
+//       <div className="typing-bbl">
+//         {[0, 0.18, 0.36].map((d, i) => (
+//           <div key={i} className="t-dot" style={{ animationDelay: `${d}s` }} />
+//         ))}
+//       </div>
+//     </div>
+//   );
+// }
+
+// const Ico = {
+//   Send: () => <svg width="17" height="17" viewBox="0 0 24 24" fill="none"><path d="M5 12H19M19 12L13 6M19 12L13 18" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/></svg>,
+//   Mic: () => <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><rect x="9" y="2" width="6" height="11" rx="3" fill="currentColor"/><path d="M5 11a7 7 0 0014 0" stroke="currentColor" strokeWidth="2" strokeLinecap="round" fill="none"/><line x1="12" y1="18" x2="12" y2="22" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/><line x1="8" y1="22" x2="16" y2="22" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/></svg>,
+//   MicOff: () => <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><line x1="2" y1="2" x2="22" y2="22" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/><path d="M9 9v3a3 3 0 005.12 2.12M15 9.34V5a3 3 0 00-5.94-.6" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/><path d="M17 16.95A7 7 0 015 11" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/><line x1="12" y1="19" x2="12" y2="23" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/><line x1="8" y1="23" x2="16" y2="23" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/></svg>,
+//   Home: () => <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M3 9.5L12 3L21 9.5V20C21 20.55 20.55 21 20 21H15V15H9V21H4C3.45 21 3 20.55 3 20V9.5Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>,
+//   Plus: () => <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M12 5V19M5 12H19" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round"/></svg>,
+//   Speak: () => <svg width="12" height="12" viewBox="0 0 24 24" fill="none"><path d="M11 5L6 9H2V15H6L11 19V5Z" fill="currentColor"/><path d="M15.54 8.46a5 5 0 010 7.07" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/></svg>,
+//   Copy: () => <svg width="12" height="12" viewBox="0 0 24 24" fill="none"><rect x="9" y="9" width="13" height="13" rx="2" stroke="currentColor" strokeWidth="2"/><path d="M5 15H4C2.9 15 2 14.1 2 13V4C2 2.9 2.9 2 4 2H13C14.1 2 15 2.9 15 5V6" stroke="currentColor" strokeWidth="2"/></svg>,
+// };
+
+// export default function Chatbot() {
+//   const navigate = useNavigate();
+//   const token = localStorage.getItem("token");
+//   const farmerName = localStorage.getItem("farmerName") || null;
+//   const now = () => new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+
+//   const [messages, setMessages] = useState([]);
+//   const [input, setInput] = useState("");
+//   const [loading, setLoading] = useState(false);
+//   const [chatId, setChatId] = useState(null);
+//   const [isListening, setIsListening] = useState(false);
+//   const [voiceSupported, setVoiceSupported] = useState(false);
+//   const [voiceLang, setVoiceLang] = useState("hi-IN");
+//   const [transcript, setTranscript] = useState("");
+//   const [isSpeaking, setIsSpeaking] = useState(false);
+//   const [sidebarOpen, setSidebarOpen] = useState(false);
+//   const [copiedId, setCopiedId] = useState(null);
+
+//   const bottomRef = useRef(null);
+//   const inputRef = useRef(null);
+//   const recRef = useRef(null);
+
+//   useEffect(() => { bottomRef.current?.scrollIntoView({ behavior: "smooth" }); }, [messages, loading]);
+//   useEffect(() => { if (window.SpeechRecognition || window.webkitSpeechRecognition) setVoiceSupported(true); }, []);
+
+//   useEffect(() => {
+//     if (!token) return;
+//     (async () => {
+//       try {
+//         const res = await fetch("http://localhost:5000/api/chats", { headers: { Authorization: token } });
+//         const data = await res.json();
+//         if (data.length > 0) {
+//           const msgs = data[0].messages || [];
+//           setMessages(msgs); setChatId(data[0]._id);
+//         } else {
+//           const cr = await fetch("http://localhost:5000/api/chats", { method: "POST", headers: { Authorization: token } });
+//           const chat = await cr.json(); setChatId(chat._id);
+//         }
+//       } catch {}
+//     })();
+//   }, []);
+
+//   const startListening = useCallback(() => {
+//     const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+//     if (!SR) return;
+//     const r = new SR(); r.lang = voiceLang; r.interimResults = true;
+//     r.onstart = () => setIsListening(true);
+//     r.onresult = e => { const t = Array.from(e.results).map(x => x[0].transcript).join(""); setTranscript(t); setInput(t); };
+//     r.onend = () => { setIsListening(false); setTranscript(""); };
+//     r.onerror = () => { setIsListening(false); setTranscript(""); };
+//     recRef.current = r; r.start();
+//   }, [voiceLang]);
+
+//   const stopListening = useCallback(() => { recRef.current?.stop(); setIsListening(false); }, []);
+//   const toggleVoice = () => { if (isListening) { stopListening(); if (input.trim()) sendMessage(input); } else startListening(); };
+
+//   const speakText = t => {
+//     if (!window.speechSynthesis) return;
+//     window.speechSynthesis.cancel();
+//     const u = new SpeechSynthesisUtterance(t.replace(/[📍💰⏰🚜📈🚚🌾✅⚠️•━]/g, "").replace(/\n/g, ". "));
+//     u.lang = voiceLang; u.rate = 0.92;
+//     u.onstart = () => setIsSpeaking(true); u.onend = () => setIsSpeaking(false);
+//     window.speechSynthesis.speak(u);
+//   };
+
+//   const copyText = (t, id) => { navigator.clipboard.writeText(t).then(() => { setCopiedId(id); setTimeout(() => setCopiedId(null), 2000); }); };
+
+//   const newChat = async () => {
+//     try { const cr = await fetch("http://localhost:5000/api/chats", { method: "POST", headers: { Authorization: token } }); const chat = await cr.json(); setChatId(chat._id); } catch {}
+//     setMessages([]); setInput(""); setSidebarOpen(false);
+//   };
+
+//   const saveMessage = async msg => {
+//     if (!chatId || !token) return;
+//     await fetch("http://localhost:5000/api/chats/message", { method: "POST", headers: { "Content-Type": "application/json", Authorization: token }, body: JSON.stringify({ chatId, message: msg }) }).catch(() => {});
+//   };
+
+//   const sendMessage = async text => {
+//     const msg = (text || input).trim(); if (!msg || loading) return;
+//     setInput("");
+//     const um = { sender: "user", text: msg, time: now(), id: Date.now() + "_u" };
+//     await saveMessage(um); setMessages(p => [...p, um]); setLoading(true);
+//     try {
+//       const res = await fetch("http://localhost:5000/api/chat", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ message: msg, farmerName }) });
+//       const data = await res.json();
+//       if (/[\u0900-\u097F]/.test(data.reply)) setVoiceLang("hi-IN");
+//       const bm = { sender: "bot", text: data.reply, time: now(), id: Date.now() + "_b", meta: data.meta || null };
+//       await saveMessage(bm); setMessages(p => [...p, bm]);
+//     } catch { setMessages(p => [...p, { sender: "bot", text: "⚠️ Server error. Please try again.", time: now(), id: Date.now() + "_e" }]); }
+//     finally { setLoading(false); setTimeout(() => inputRef.current?.focus(), 80); }
+//   };
+
+//   const handleKey = e => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); sendMessage(); } };
+
+//   return (
+//     <>
+//       <style>{CSS}</style>
+//       <div className="blob b1" /><div className="blob b2" /><div className="blob b3" />
+
+//       <div className="root">
+
+//         {/* ── GREEN PILL › — TOP LEFT CORNER ── */}
+//         <button
+//           className={`pill ${sidebarOpen ? "pill-open" : ""}`}
+//           onClick={() => setSidebarOpen(p => !p)}
+//         >
+//           <span>{sidebarOpen ? "‹" : "›"}</span>
+//         </button>
+
+//         {/* ── LEFT SIDEBAR (menu) ── */}
+//         <AnimatePresence>
+//           {sidebarOpen && (
+//             <>
+//               <motion.div key="bd" className="sb-bd" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setSidebarOpen(false)} />
+//               <motion.aside key="sb" className="sidebar"
+//                 initial={{ x: -295, opacity: 0 }} animate={{ x: 0, opacity: 1 }} exit={{ x: -295, opacity: 0 }}
+//                 transition={{ type: "spring", stiffness: 340, damping: 34 }}
+//               >
+//                 <div className="sb-head">
+//                   <span style={{ fontSize: 22 }}>🌾</span>
+//                   <div><div className="sb-name">AgroAI</div><div className="sb-tag">Crop Intelligence</div></div>
+//                 </div>
+//                 {farmerName && (
+//                   <div className="sb-user">
+//                     <div className="sb-av">{farmerName[0].toUpperCase()}</div>
+//                     <div><div className="sb-uname">{farmerName}</div><div className="sb-utag">Registered Farmer</div></div>
+//                   </div>
+//                 )}
+//                 <button className="sb-btn ob" onClick={() => navigate("/")}><Ico.Home /> Back to Home</button>
+//                 <button className="sb-btn gb" onClick={newChat}><Ico.Plus /> New Conversation</button>
+//                 <div className="sb-rule" />
+//                 <div className="sb-sec">Voice Language</div>
+//                 <div style={{ display: "flex", gap: 6 }}>
+//                   {[["en-IN", "🇬🇧", "English"], ["hi-IN", "🇮🇳", "हिंदी"]].map(([v, f, l]) => (
+//                     <button key={v} className={`lang-btn ${voiceLang === v ? "lang-on" : ""}`} onClick={() => setVoiceLang(v)}>{f} {l}</button>
+//                   ))}
+//                 </div>
+//                 <div className="sb-sec" style={{ marginTop: 16 }}>Market Status</div>
+//                 <div className="sb-mandi">
+//                   <div style={{ display: "flex", alignItems: "center", gap: 6 }}><span className="ldot" /><b style={{ fontSize: 12, color: "#15803d" }}>Live Mandi Data</b></div>
+//                   <div style={{ fontSize: 11, color: "#6b7280", marginTop: 4 }}>📍 Haldwani · Uttarakhand</div>
+//                   <div style={{ display: "flex", flexWrap: "wrap", gap: 4, marginTop: 7 }}>
+//                     {["🍅 Tamatar", "🧅 Pyaz", "🥔 Aloo", "🥦 Gobhi"].map(c => <span key={c} className="mpill">{c}</span>)}
+//                   </div>
+//                 </div>
+//                 <div className="sb-tip">💡 <b>Pro tip:</b> Fasal ka naam aur matra batayein for best advice.</div>
+//                 <div className="sb-foot">Made for farmers of Uttarakhand 🌾</div>
+//               </motion.aside>
+//             </>
+//           )}
+//         </AnimatePresence>
+
+//         {/* ── MAIN AREA ── */}
+//         <div className="main">
+
+//           {/* COLLEGE BANNER — more gap from sides */}
+//           <div className="banner-wrap">
+//             <div className="banner">
+//               <div className="ban-shine" />
+//               <div className="ban-body">
+//                 <div style={{ position: "relative", flexShrink: 0 }}>
+//                   <img src={collegeLogo} alt="logo" className="ban-logo" />
+//                   <div className="ban-ring" />
+//                 </div>
+//                 <div style={{ flex: 1, minWidth: 0 }}>
+//                   <div className="ban-h1">प्रौद्योगिकी महाविद्यालय</div>
+//                   <div className="ban-h2">College of Technology, Pantnagar</div>
+//                   <div className="ban-h3">G.B. Pant University of Agriculture &amp; Technology</div>
+//                 </div>
+//                 <div className="ban-vline" />
+//                 <div style={{ textAlign: "right", flexShrink: 0 }}>
+//                   <div className="ban-appname">AgroAI</div>
+//                   <div className="ban-appsub">Intelligent Crop Market Assistant</div>
+                 
+//                 </div>
+//               </div>
+//               <div className="ban-foot">
+//                 <span className="ban-quote">"Empowering farmers of Uttarakhand with AI-driven market intelligence"</span>
+//                 {/* <span className="ban-live"><span className="ldot-sm" /> Live Data Active</span> */}
+//               </div>
+//             </div>
+//           </div>
+
+//           {/* CONTENT ROW — chat takes full width now */}
+//           <div className="content-row">
+
+//             {/* ── CHAT CARD ── */}
+//             <div className="chat-wrap">
+//               <div className="chat-card">
+
+//                 {/* Chat header */}
+//                 <header className="chat-hdr">
+//                   <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+//                     <div className="hdr-av">🤖</div>
+//                     <div>
+//                       <div className="hdr-title">AgroAI Assistant</div>
+//                       <div className="hdr-status"><span className="hdr-dot" /> Online · {voiceLang === "hi-IN" ? "हिंदी मोड" : "English Mode"}</div>
+//                     </div>
+//                   </div>
+//                   <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+//                     <AnimatePresence>
+//                       {isSpeaking && (
+//                         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="spk-badge">
+//                           {[0, 0.15, 0.3].map((d, i) => <span key={i} className="spk-bar" style={{ animationDelay: `${d}s` }} />)}
+//                           Speaking
+//                         </motion.div>
+//                       )}
+//                     </AnimatePresence>
+//                     <button className="hdr-btn" onClick={() => navigate("/")}><Ico.Home /></button>
+//                   </div>
+//                 </header>
+
+//                 {/* Messages */}
+//                 <div className="msgs">
+
+//                   {/* Welcome shown when no messages yet */}
+//                   {messages.length === 0 && (
+//                     <motion.div className="welcome-inline" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.35 }}>
+//                       <div className="wi-heading">
+//                         🙏 {farmerName ? `${farmerName} ji, AgroAI में आपका स्वागत है।` : "AgroAI में आपका स्वागत है।"}
+//                       </div>
+//                       <p className="wi-body">
+//                         नमस्ते! मैं <strong>AgroAI</strong> हूँ — प्रौद्योगिकी महाविद्यालय, पंतनगर का
+//                         AI-powered फसल बाजार सहायक। दाईं तरफ फसलों की सूची देखें और नीचे अपना सवाल पूछें।
+//                       </p>
+
+//                   {/* <div className="cs-title">आप मुझसे निम्नलिखित विषयों पर चर्चा कर सकते हैं:</div> */}
+//                   <div className="cs-list">
+//                     {CROP_TOPICS.map((t, i) => (
+//                       <div key={i} className="cs-item">
+//                         <span>{t.icon}</span>
+//                         <span className="cs-label">{t.label}</span>
+//                       </div>
+//                     ))}
+//                   </div>
+                
+//                     </motion.div>
+//                   )}
+
+//                   <AnimatePresence initial={false}>
+//                     {messages.map((msg, i) => (
+//                       <motion.div key={msg.id || i}
+//                         initial={{ opacity: 0, y: 12, scale: 0.98 }} animate={{ opacity: 1, y: 0, scale: 1 }}
+//                         transition={{ duration: 0.24, ease: [0.22, 1, 0.36, 1] }}
+//                         className={`mrow ${msg.sender === "user" ? "mrow-u" : "mrow-b"}`}
+//                       >
+//                         {msg.sender === "bot" && <div className="bot-av">🌾</div>}
+//                         <div className={`bbl ${msg.sender === "user" ? "bbl-u" : "bbl-b"}`}>
+//                           {msg.sender === "bot" ? <BotMessage text={msg.text} /> : <p className="utxt">{msg.text}</p>}
+//                           {msg.meta && (
+//                             <div className="meta">
+//                               {msg.meta.crop && <span className="mchip">🌱 {msg.meta.crop}</span>}
+//                               {msg.meta.location && <span className="mchip">📍 {msg.meta.location}</span>}
+//                               {msg.meta.quantity > 0 && <span className="mchip">⚖️ {msg.meta.quantity}kg</span>}
+//                               <span className="mchip">{msg.meta.priceSource === "live" ? "🟢 Live" : "📊 Est."}</span>
+//                             </div>
+//                           )}
+//                           <div className="bbl-foot">
+//                             <span className="bbl-time">{msg.time}</span>
+//                             {msg.sender === "bot" && (
+//                               <div style={{ display: "flex", gap: 4 }}>
+//                                 <button className="abt" onClick={() => speakText(msg.text)}><Ico.Speak /></button>
+//                                 <button className="abt" onClick={() => copyText(msg.text, msg.id)}>{copiedId === msg.id ? "✓" : <Ico.Copy />}</button>
+//                               </div>
+//                             )}
+//                           </div>
+//                         </div>
+//                       </motion.div>
+//                     ))}
+//                   </AnimatePresence>
+
+//                   {loading && <TypingIndicator />}
+//                   <div ref={bottomRef} />
+//                 </div>
+
+//                 {/* Input */}
+//                 <div className="inp-area">
+//                   {isListening && (
+//                     <div className="listen-bar">
+//                       <div style={{ display: "flex", gap: 3 }}>{[...Array(5)].map((_, i) => <div key={i} className="lbar" style={{ animationDelay: `${i * 0.1}s` }} />)}</div>
+//                       <span className="listen-txt">{transcript || "Listening..."}</span>
+//                     </div>
+//                   )}
+//                   <div className="inp-row">
+//                     <textarea ref={inputRef} className="inp" value={input}
+//                       onChange={e => setInput(e.target.value)} onKeyDown={handleKey}
+//                       placeholder="यहाँ अपना प्रश्न लिखें..." rows={1} maxLength={500}
+//                     />
+//                     {voiceSupported && (
+//                       <button className={`mic ${isListening ? "mic-on" : ""}`} onClick={toggleVoice}>
+//                         {isListening ? <Ico.MicOff /> : <Ico.Mic />}
+//                       </button>
+//                     )}
+//                     <button className="send" onClick={() => sendMessage()} disabled={!input.trim() || loading}><Ico.Send /></button>
+//                   </div>
+//                   <div className="inp-foot">AgroAI · Live mandi data + LLaMA AI · Prices are indicative</div>
+//                 </div>
+
+//               </div>
+//             </div>
+
+//           </div>{/* /content-row */}
+//         </div>{/* /main */}
+//       </div>{/* /root */}
+//     </>
+//   );
+// }
+
+// /* ══════════════════════════════════════════════════════════════ */
+// const CSS = `
+//   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+//   html, body { height: 100%; overflow: hidden; }
+//   body { font-family: 'Segoe UI', 'Noto Sans', 'Noto Sans Devanagari', system-ui, sans-serif; background: #ffffff; color: #1a1a1a; }
+
+//   /* ── BLOBS ──────────────────────────────────── */
+//   .blob { position: fixed; border-radius: 50%; filter: blur(90px); pointer-events: none; z-index: 0; }
+//   .b1 { width: 600px; height: 600px; background: radial-gradient(circle, rgba(187,247,208,0.35), transparent); top: -200px; left: -200px; animation: bf 16s ease-in-out infinite; }
+//   .b2 { width: 500px; height: 500px; background: radial-gradient(circle, rgba(209,250,229,0.3), transparent); bottom: -150px; right: -150px; animation: bf 20s ease-in-out infinite reverse; }
+//   .b3 { width: 350px; height: 350px; background: radial-gradient(circle, rgba(254,243,199,0.25), transparent); top: 35%; left: 45%; animation: bf 24s ease-in-out infinite; }
+//   @keyframes bf { 0%,100% { transform: translate(0,0) scale(1); } 33% { transform: translate(25px,-18px) scale(1.04); } 66% { transform: translate(-18px,22px) scale(0.97); } }
+
+//   /* ── ROOT ───────────────────────────────────── */
+//   .root { position: relative; height: 100vh; display: flex; overflow: hidden; z-index: 1; }
+
+//   /* ── GREEN PILL › — TOP LEFT CORNER ────────── */
+//   .pill {
+//     position: fixed;
+//     top: 16px;
+//     left: 0;
+//     z-index: 300;
+//     background: #16a34a;
+//     border: none;
+//     border-radius: 0 22px 22px 0;
+//     width: 30px;
+//     height: 48px;
+//     cursor: pointer;
+//     display: flex;
+//     align-items: center;
+//     justify-content: center;
+//     box-shadow: 2px 0 16px rgba(22,163,74,0.38);
+//     transition: all 0.22s cubic-bezier(0.22,1,0.36,1);
+//     padding: 0;
+//   }
+//   .pill span { color: #fff; font-size: 22px; font-weight: 700; line-height: 1; user-select: none; }
+//   .pill:hover { width: 36px; background: #15803d; }
+//   .pill.pill-open { left: 283px; background: #dc2626; }
+//   .pill.pill-open:hover { background: #b91c1c; }
+
+//   /* ── SIDEBAR ─────────────────────────────────── */
+//   .sb-bd { position: fixed; inset: 0; background: rgba(0,0,0,0.16); backdrop-filter: blur(3px); z-index: 149; }
+//   .sidebar {
+//     position: fixed; top: 0; left: 0; width: 282px; height: 100vh;
+//     background: rgba(255,255,255,0.97); backdrop-filter: blur(20px);
+//     border-right: 1px solid rgba(22,163,74,0.14);
+//     box-shadow: 6px 0 32px rgba(0,0,0,0.08);
+//     display: flex; flex-direction: column;
+//     padding: 20px 15px 15px; z-index: 150; overflow-y: auto;
+//   }
+//   .sb-head { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; padding-bottom: 12px; border-bottom: 1px solid rgba(22,163,74,0.1); }
+//   .sb-name { font-size: 16px; font-weight: 700; color: #15803d; }
+//   .sb-tag { font-size: 10px; color: #9ca3af; text-transform: uppercase; letter-spacing: 0.7px; }
+//   .sb-user { display: flex; align-items: center; gap: 9px; background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 10px; padding: 8px 10px; margin-bottom: 12px; }
+//   .sb-av { width: 30px; height: 30px; border-radius: 50%; background: #16a34a; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; color: #fff; }
+//   .sb-uname { font-size: 12px; font-weight: 600; color: #15803d; }
+//   .sb-utag { font-size: 10px; color: #9ca3af; }
+//   .sb-btn { display: flex; align-items: center; gap: 8px; border-radius: 9px; cursor: pointer; font-size: 12.5px; padding: 8px 11px; width: 100%; margin-bottom: 6px; transition: all 0.18s; font-family: inherit; }
+//   .ob { background: transparent; border: 1px solid #e5e7eb; color: #374151; }
+//   .ob:hover { background: #f0fdf4; color: #15803d; border-color: #bbf7d0; }
+//   .gb { background: #16a34a; border: none; color: #fff; font-weight: 600; justify-content: center; }
+//   .gb:hover { background: #15803d; }
+//   .sb-rule { height: 1px; background: rgba(22,163,74,0.1); margin: 9px 0; }
+//   .sb-sec { font-size: 10px; color: #9ca3af; text-transform: uppercase; letter-spacing: 1px; font-weight: 600; margin-bottom: 7px; }
+//   .lang-btn { flex: 1; padding: 7px; border-radius: 8px; border: 1px solid #e5e7eb; background: transparent; color: #6b7280; font-size: 12px; cursor: pointer; transition: all 0.18s; font-family: inherit; }
+//   .lang-btn:hover { background: #f0fdf4; }
+//   .lang-on { background: #dcfce7 !important; border-color: #16a34a !important; color: #15803d !important; font-weight: 600; }
+//   .sb-mandi { background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 10px; padding: 10px 11px; }
+//   .mpill { background: #dcfce7; border: 1px solid #bbf7d0; border-radius: 20px; padding: 2px 7px; font-size: 10.5px; color: #15803d; }
+//   .ldot { width: 7px; height: 7px; border-radius: 50%; background: #16a34a; box-shadow: 0 0 6px #16a34a; display: inline-block; animation: pulse 2s infinite; }
+//   .sb-tip { background: #fffbeb; border-left: 3px solid #f59e0b; border-radius: 0 8px 8px 0; padding: 8px 10px; font-size: 11px; color: #78716c; margin-top: 12px; line-height: 1.55; }
+//   .sb-foot { margin-top: auto; padding-top: 12px; font-size: 10.5px; color: #9ca3af; text-align: center; }
+
+//   /* ── MAIN ────────────────────────────────────── */
+//   .main { flex: 1; display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
+
+//   /* ── BANNER — generous side gap ─────────────── */
+//   .banner-wrap { padding: 14px 40px 0 40px; flex-shrink: 0; }
+
+//   .banner {
+//     position: relative; overflow: hidden;
+//     background: linear-gradient(135deg, #7f1d1d 0%, #991b1b 45%, #b91c1c 100%);
+//     border-radius: 12px;
+//     box-shadow: 0 4px 22px rgba(127,29,29,0.3);
+//     border: 1px solid rgba(255,255,255,0.06);
+//   }
+//   .ban-shine { position: absolute; inset: 0; background: linear-gradient(110deg, transparent 30%, rgba(255,255,255,0.05) 50%, transparent 70%); animation: shine 5s infinite; }
+//   @keyframes shine { 0%,100% { transform: translateX(-100%); } 50% { transform: translateX(100%); } }
+//   .ban-body { position: relative; display: flex; align-items: center; gap: 16px; padding: 13px 22px; }
+//   .ban-logo { width: 52px; height: 52px; border-radius: 50%; object-fit: cover; border: 2px solid rgba(255,255,255,0.22); flex-shrink: 0; }
+//   .ban-ring { position: absolute; inset: -3px; border-radius: 50%; border: 1.5px solid rgba(253,230,138,0.35); animation: spin 14s linear infinite; pointer-events: none; }
+//   @keyframes spin { to { transform: rotate(360deg); } }
+//   .ban-h1 { font-size: 16px; font-weight: 700; color: #fff; }
+//   .ban-h2 { font-size: 12px; color: rgba(255,210,160,0.9); font-style: italic; margin-top: 1px; }
+//   .ban-h3 { font-size: 11px; color: rgba(255,255,255,0.45); margin-top: 2px; }
+//   .ban-vline { width: 1px; height: 48px; background: rgba(255,255,255,0.14); flex-shrink: 0; }
+//   .ban-appname { font-size: 20px; font-weight: 800; color: #fde68a; font-style: italic; }
+//   .ban-appsub { font-size: 9.5px; color: rgba(255,255,255,0.45); text-transform: uppercase; letter-spacing: 0.8px; margin-top: 1px; }
+//   .ban-pills { display: flex; gap: 4px; justify-content: flex-end; margin-top: 5px; flex-wrap: wrap; }
+//   .ban-pill { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.18); border-radius: 20px; padding: 1px 8px; font-size: 9.5px; color: rgba(255,255,255,0.82); }
+//   .ban-foot { display: flex; justify-content: space-between; align-items: center; padding: 5px 22px; background: rgba(0,0,0,0.14); border-top: 1px solid rgba(255,255,255,0.06); flex-wrap: wrap; gap: 4px; }
+//   .ban-quote { font-size: 10px; font-style: italic; color: rgba(255,255,200,0.58); }
+//   .ban-live { display: flex; align-items: center; gap: 5px; font-size: 10.5px; color: #86efac; font-weight: 600; }
+//   .ldot-sm { width: 5px; height: 5px; border-radius: 50%; background: #4ade80; display: inline-block; box-shadow: 0 0 5px #4ade80; animation: pulse 2s infinite; }
+//   @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.3; } }
+
+//   /* ── CONTENT ROW — chat + crops side by side ── */
+//   .content-row {
+//     flex: 1;
+//     display: flex;
+//     gap: 14px;
+//     padding: 12px 40px 16px 40px;
+//     min-height: 0;
+//     overflow: hidden;
+//   }
+
+//   /* ── CHAT WRAP ───────────────────────────────── */
+//   .chat-wrap { flex: 1; display: flex; flex-direction: column; min-height: 0; overflow: hidden; }
+
+//   .chat-card {
+//     flex: 1; display: flex; flex-direction: column; min-height: 0;
+//     background: rgba(255,255,255,0.78);
+//     backdrop-filter: blur(28px); -webkit-backdrop-filter: blur(28px);
+//     border: 1px solid rgba(255,255,255,0.92);
+//     border-radius: 14px; overflow: hidden;
+//     box-shadow: 0 8px 40px rgba(0,0,0,0.07), 0 1px 0 rgba(255,255,255,0.95) inset;
+//   }
+
+//   .chat-hdr { display: flex; align-items: center; justify-content: space-between; padding: 11px 15px; background: rgba(255,255,255,0.6); border-bottom: 1px solid rgba(22,163,74,0.1); flex-shrink: 0; }
+//   .hdr-av { width: 33px; height: 33px; border-radius: 50%; background: linear-gradient(135deg, #16a34a, #15803d); display: flex; align-items: center; justify-content: center; font-size: 15px; box-shadow: 0 2px 8px rgba(22,163,74,0.2); }
+//   .hdr-title { font-size: 13.5px; font-weight: 700; color: #15803d; }
+//   .hdr-status { display: flex; align-items: center; gap: 5px; font-size: 11px; color: #9ca3af; }
+//   .hdr-dot { width: 5px; height: 5px; border-radius: 50%; background: #16a34a; animation: pulse 2s infinite; }
+//   .hdr-btn { background: rgba(255,255,255,0.7); border: 1px solid rgba(22,163,74,0.18); color: #374151; padding: 6px 8px; border-radius: 8px; cursor: pointer; transition: all 0.18s; display: flex; align-items: center; }
+//   .hdr-btn:hover { background: #f0fdf4; color: #15803d; }
+//   .spk-badge { display: flex; align-items: center; gap: 5px; background: #dcfce7; border: 1px solid #bbf7d0; border-radius: 20px; padding: 4px 10px; font-size: 11px; color: #15803d; }
+//   .spk-bar { display: inline-block; width: 3px; height: 10px; background: #16a34a; border-radius: 2px; animation: wv 0.6s ease-in-out infinite alternate; }
+//   @keyframes wv { to { height: 3px; } }
+
+//   .msgs { flex: 1; overflow-y: auto; padding: 14px 15px 8px; display: flex; flex-direction: column; gap: 11px; scrollbar-width: thin; scrollbar-color: #bbf7d0 transparent; min-height: 0; }
+
+//   /* ── INLINE WELCOME (stays until first message, small) ── */
+//   .welcome-inline {
+//     background: rgba(255,255,255,0.85);
+//     border: 1px solid rgba(22,163,74,0.12);
+//     border-radius: 12px;
+//     padding: 18px 20px;
+//     box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+//   }
+//   /* Maroon bold heading — bigger font */
+//   .wi-heading {
+//     font-size: 22px;
+//     font-weight: 800;
+//     color: #7f1d1d;
+//     margin-bottom: 8px;
+//     line-height: 1.35;
+//     letter-spacing: -0.2px;
+//   }
+//   .wi-body {
+//     font-size: 15px;
+//     font-weight: 500;
+//     color: #374151;
+//     line-height: 1.75;
+//   }
+//   .wi-body strong { color: #15803d; font-weight: 700; }
+
+//   /* ── MESSAGE BUBBLES ─────────────────────────── */
+//   .mrow { display: flex; align-items: flex-end; gap: 7px; }
+//   .mrow-u { flex-direction: row-reverse; }
+//   .bot-av { width: 26px; height: 26px; border-radius: 50%; background: linear-gradient(135deg, #16a34a, #15803d); display: flex; align-items: center; justify-content: center; font-size: 12px; flex-shrink: 0; box-shadow: 0 2px 6px rgba(22,163,74,0.18); }
+//   .bbl { max-width: 76%; border-radius: 14px; padding: 10px 13px; }
+//   .bbl-u { background: linear-gradient(135deg, #16a34a, #15803d); border-bottom-right-radius: 3px; box-shadow: 0 3px 12px rgba(22,163,74,0.25); }
+//   .bbl-b { background: rgba(255,255,255,0.92); border: 1px solid rgba(22,163,74,0.12); border-bottom-left-radius: 3px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+//   .utxt { font-size: 14px; color: #fff; line-height: 1.55; }
+//   .bot-content { font-size: 13.5px; line-height: 1.68; color: #1f2937; }
+//   .msg-text { margin-bottom: 3px; }
+//   .msg-divider { height: 1px; background: #e5e7eb; margin: 6px 0; }
+//   .msg-section { display: flex; align-items: center; gap: 6px; font-weight: 700; color: #15803d; font-size: 13px; margin: 6px 0 2px; }
+//   .msg-bullet { display: flex; align-items: flex-start; gap: 7px; margin: 3px 0; font-size: 13px; color: #374151; }
+//   .bdot { width: 5px; height: 5px; border-radius: 50%; background: #16a34a; flex-shrink: 0; margin-top: 7px; }
+//   .meta { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 6px; }
+//   .mchip { background: #dcfce7; border: 1px solid #bbf7d0; border-radius: 20px; padding: 2px 7px; font-size: 10px; color: #15803d; }
+//   .bbl-foot { display: flex; align-items: center; justify-content: space-between; margin-top: 5px; gap: 8px; }
+//   .bbl-time { font-size: 10px; color: #9ca3af; }
+//   .abt { background: transparent; border: 1px solid #e5e7eb; color: #9ca3af; width: 22px; height: 22px; border-radius: 5px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 10px; transition: all 0.15s; }
+//   .abt:hover { background: #f0fdf4; color: #16a34a; border-color: #bbf7d0; }
+
+//   /* ── TYPING ──────────────────────────────────── */
+//   .typing-bbl { background: rgba(255,255,255,0.92); border: 1px solid rgba(22,163,74,0.12); border-radius: 14px; border-bottom-left-radius: 3px; padding: 12px 16px; display: flex; gap: 6px; align-items: center; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+//   .t-dot { width: 7px; height: 7px; border-radius: 50%; background: #16a34a; animation: tdot 1.2s ease-in-out infinite; }
+//   @keyframes tdot { 0%,100% { transform: translateY(0); opacity: 0.4; } 50% { transform: translateY(-5px); opacity: 1; } }
+
+//   /* ── INPUT ───────────────────────────────────── */
+//   .inp-area { border-top: 1px solid rgba(22,163,74,0.08); background: rgba(255,255,255,0.5); flex-shrink: 0; padding: 9px 13px 7px; }
+//   .listen-bar { display: flex; align-items: center; gap: 10px; background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px; padding: 7px 11px; margin-bottom: 7px; }
+//   .lbar { width: 3px; height: 13px; background: #16a34a; border-radius: 2px; animation: lv 0.6s ease-in-out infinite alternate; }
+//   @keyframes lv { to { height: 3px; } }
+//   .listen-txt { font-size: 12px; color: #16a34a; flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+//   .inp-row { display: flex; align-items: flex-end; gap: 7px; }
+//   .inp {
+//     flex: 1; background: rgba(255,255,255,0.88);
+//     border: 1.5px solid rgba(22,163,74,0.2); border-radius: 12px;
+//     color: #1f2937; padding: 10px 13px; font-size: 14px;
+//     resize: none; outline: none; line-height: 1.5; max-height: 88px;
+//     overflow-y: auto; font-family: inherit;
+//     transition: border-color 0.18s, box-shadow 0.18s;
+//     box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+//   }
+//   .inp:focus { border-color: #16a34a; box-shadow: 0 0 0 3px rgba(22,163,74,0.09); }
+//   .inp::placeholder { color: #9ca3af; }
+//   .mic { width: 40px; height: 40px; border-radius: 10px; border: 1.5px solid rgba(22,163,74,0.2); background: rgba(255,255,255,0.8); color: #6b7280; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.18s; flex-shrink: 0; }
+//   .mic:hover { background: #f0fdf4; color: #16a34a; }
+//   .mic-on { background: #fef2f2 !important; border-color: #fca5a5 !important; color: #dc2626 !important; }
+//   .send { width: 40px; height: 40px; border-radius: 10px; border: none; background: linear-gradient(135deg, #16a34a, #15803d); color: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s; flex-shrink: 0; box-shadow: 0 3px 10px rgba(22,163,74,0.28); }
+//   .send:hover:not(:disabled) { transform: scale(1.06); background: linear-gradient(135deg, #15803d, #166534); }
+//   .send:disabled { opacity: 0.32; cursor: not-allowed; }
+//   .inp-foot { margin-top: 4px; text-align: center; font-size: 9.5px; color: #9ca3af; }
+
+//   /* ── CROPS STRIP — inside chat card, always visible ────── */
+//   .crops-strip {
+//     flex-shrink: 0;
+//     border-top: 1px solid rgba(22,163,74,0.1);
+//     background: rgba(248,255,248,0.7);
+//     padding: 10px 16px 8px;
+//   }
+//   .cs-title {
+//     font-size: 13px;
+//     font-weight: 700;
+//     color: #374151;
+//     margin-bottom: 8px;
+//     line-height: 1.5;
+//   }
+//   .cs-list {
+//     display: flex;
+//     flex-wrap: wrap;
+//     gap: 4px 16px;
+//   }
+//   .cs-item {
+//     display: flex;
+//     align-items: center;
+//     gap: 5px;
+//     cursor: default;
+//     user-select: none;
+//     padding: 2px 0;
+//   }
+//   .cs-label {
+//     font-size: 13px;
+//     font-weight: 500;
+//     color: #374151;
+//   }
+
+//   /* ── SCROLLBAR ───────────────────────────────── */
+//   ::-webkit-scrollbar { width: 4px; }
+//   ::-webkit-scrollbar-track { background: transparent; }
+//   ::-webkit-scrollbar-thumb { background: #bbf7d0; border-radius: 3px; }
+
+//   /* ── RESPONSIVE ──────────────────────────────── */
+//   @media (max-width: 768px) {
+//     .content-row { padding: 10px 16px 12px; }
+//     .banner-wrap { padding: 12px 16px 0; }
+//     .bbl { max-width: 86%; }
+//     .pill.pill-open { left: 268px; }
+//     .sidebar { width: 265px; }
+//     .cs-list { gap: 3px 10px; }
+//     .cs-label { font-size: 12px; }
+//   }
+//   @media (max-width: 600px) {
+//     .ban-body { padding: 11px 14px; }
+//     .ban-logo { width: 44px; height: 44px; }
+//     .ban-h1 { font-size: 13.5px; }
+//     .ban-pills { display: none; }
+//     .content-row { padding: 8px 10px 10px; }
+//     .banner-wrap { padding: 10px 10px 0; }
+//   }
+// `;
+
 import { useState, useRef, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
@@ -3213,7 +3849,7 @@ export default function Chatbot() {
         {/* ── MAIN AREA ── */}
         <div className="main">
 
-          {/* COLLEGE BANNER — more gap from sides */}
+          {/* COLLEGE BANNER */}
           <div className="banner-wrap">
             <div className="banner">
               <div className="ban-shine" />
@@ -3231,17 +3867,15 @@ export default function Chatbot() {
                 <div style={{ textAlign: "right", flexShrink: 0 }}>
                   <div className="ban-appname">AgroAI</div>
                   <div className="ban-appsub">Intelligent Crop Market Assistant</div>
-                 
                 </div>
               </div>
               <div className="ban-foot">
                 <span className="ban-quote">"Empowering farmers of Uttarakhand with AI-driven market intelligence"</span>
-                {/* <span className="ban-live"><span className="ldot-sm" /> Live Data Active</span> */}
               </div>
             </div>
           </div>
 
-          {/* CONTENT ROW — chat takes full width now */}
+          {/* CONTENT ROW */}
           <div className="content-row">
 
             {/* ── CHAT CARD ── */}
@@ -3273,30 +3907,26 @@ export default function Chatbot() {
                 {/* Messages */}
                 <div className="msgs">
 
-                  {/* Welcome shown when no messages yet */}
-                  {messages.length === 0 && (
-                    <motion.div className="welcome-inline" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.35 }}>
-                      <div className="wi-heading">
-                        🙏 {farmerName ? `${farmerName} ji, AgroAI में आपका स्वागत है।` : "AgroAI में आपका स्वागत है।"}
-                      </div>
-                      <p className="wi-body">
-                        नमस्ते! मैं <strong>AgroAI</strong> हूँ — प्रौद्योगिकी महाविद्यालय, पंतनगर का
-                        AI-powered फसल बाजार सहायक। दाईं तरफ फसलों की सूची देखें और नीचे अपना सवाल पूछें।
-                      </p>
-
-                  {/* <div className="cs-title">आप मुझसे निम्नलिखित विषयों पर चर्चा कर सकते हैं:</div> */}
-                  <div className="cs-list">
-                    {CROP_TOPICS.map((t, i) => (
-                      <div key={i} className="cs-item">
-                        <span>{t.icon}</span>
-                        <span className="cs-label">{t.label}</span>
-                      </div>
-                    ))}
+                  {/* ── PERMANENT WELCOME CARD — always visible, never removed ── */}
+                  <div className="welcome-inline">
+                    <div className="wi-heading">
+                      🙏 {farmerName ? `${farmerName} ji, AgroAI में आपका स्वागत है।` : "AgroAI में आपका स्वागत है।"}
+                    </div>
+                    <p className="wi-body">
+                      नमस्ते! मैं <strong>AgroAI</strong> हूँ — प्रौद्योगिकी महाविद्यालय, पंतनगर का
+                      AI-powered फसल बाजार सहायक। दाईं तरफ फसलों की सूची देखें और नीचे अपना सवाल पूछें।
+                    </p>
+                    <div className="cs-list">
+                      {CROP_TOPICS.map((t, i) => (
+                        <div key={i} className="cs-item">
+                          <span>{t.icon}</span>
+                          <span className="cs-label">{t.label}</span>
+                        </div>
+                      ))}
+                    </div>
                   </div>
-                
-                    </motion.div>
-                  )}
 
+                  {/* Chat messages */}
                   <AnimatePresence initial={false}>
                     {messages.map((msg, i) => (
                       <motion.div key={msg.id || i}
@@ -3384,22 +4014,13 @@ const CSS = `
 
   /* ── GREEN PILL › — TOP LEFT CORNER ────────── */
   .pill {
-    position: fixed;
-    top: 16px;
-    left: 0;
-    z-index: 300;
-    background: #16a34a;
-    border: none;
+    position: fixed; top: 16px; left: 0; z-index: 300;
+    background: #16a34a; border: none;
     border-radius: 0 22px 22px 0;
-    width: 30px;
-    height: 48px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    width: 30px; height: 48px;
+    cursor: pointer; display: flex; align-items: center; justify-content: center;
     box-shadow: 2px 0 16px rgba(22,163,74,0.38);
-    transition: all 0.22s cubic-bezier(0.22,1,0.36,1);
-    padding: 0;
+    transition: all 0.22s cubic-bezier(0.22,1,0.36,1); padding: 0;
   }
   .pill span { color: #fff; font-size: 22px; font-weight: 700; line-height: 1; user-select: none; }
   .pill:hover { width: 36px; background: #15803d; }
@@ -3442,9 +4063,8 @@ const CSS = `
   /* ── MAIN ────────────────────────────────────── */
   .main { flex: 1; display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
 
-  /* ── BANNER — generous side gap ─────────────── */
+  /* ── BANNER ─────────────────────────────────── */
   .banner-wrap { padding: 14px 40px 0 40px; flex-shrink: 0; }
-
   .banner {
     position: relative; overflow: hidden;
     background: linear-gradient(135deg, #7f1d1d 0%, #991b1b 45%, #b91c1c 100%);
@@ -3464,27 +4084,19 @@ const CSS = `
   .ban-vline { width: 1px; height: 48px; background: rgba(255,255,255,0.14); flex-shrink: 0; }
   .ban-appname { font-size: 20px; font-weight: 800; color: #fde68a; font-style: italic; }
   .ban-appsub { font-size: 9.5px; color: rgba(255,255,255,0.45); text-transform: uppercase; letter-spacing: 0.8px; margin-top: 1px; }
-  .ban-pills { display: flex; gap: 4px; justify-content: flex-end; margin-top: 5px; flex-wrap: wrap; }
-  .ban-pill { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.18); border-radius: 20px; padding: 1px 8px; font-size: 9.5px; color: rgba(255,255,255,0.82); }
   .ban-foot { display: flex; justify-content: space-between; align-items: center; padding: 5px 22px; background: rgba(0,0,0,0.14); border-top: 1px solid rgba(255,255,255,0.06); flex-wrap: wrap; gap: 4px; }
   .ban-quote { font-size: 10px; font-style: italic; color: rgba(255,255,200,0.58); }
-  .ban-live { display: flex; align-items: center; gap: 5px; font-size: 10.5px; color: #86efac; font-weight: 600; }
-  .ldot-sm { width: 5px; height: 5px; border-radius: 50%; background: #4ade80; display: inline-block; box-shadow: 0 0 5px #4ade80; animation: pulse 2s infinite; }
   @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.3; } }
 
-  /* ── CONTENT ROW — chat + crops side by side ── */
+  /* ── CONTENT ROW ─────────────────────────────── */
   .content-row {
-    flex: 1;
-    display: flex;
-    gap: 14px;
+    flex: 1; display: flex; gap: 14px;
     padding: 12px 40px 16px 40px;
-    min-height: 0;
-    overflow: hidden;
+    min-height: 0; overflow: hidden;
   }
 
   /* ── CHAT WRAP ───────────────────────────────── */
   .chat-wrap { flex: 1; display: flex; flex-direction: column; min-height: 0; overflow: hidden; }
-
   .chat-card {
     flex: 1; display: flex; flex-direction: column; min-height: 0;
     background: rgba(255,255,255,0.78);
@@ -3507,30 +4119,46 @@ const CSS = `
 
   .msgs { flex: 1; overflow-y: auto; padding: 14px 15px 8px; display: flex; flex-direction: column; gap: 11px; scrollbar-width: thin; scrollbar-color: #bbf7d0 transparent; min-height: 0; }
 
-  /* ── INLINE WELCOME (stays until first message, small) ── */
+  /* ── PERMANENT WELCOME CARD ─────────────────── */
   .welcome-inline {
-    background: rgba(255,255,255,0.85);
-    border: 1px solid rgba(22,163,74,0.12);
+    background: linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(240,253,244,0.9) 100%);
+    border: 1px solid rgba(22,163,74,0.15);
+    border-left: 3px solid #7f1d1d;
     border-radius: 12px;
-    padding: 18px 20px;
+    padding: 14px 18px 12px;
     box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+    flex-shrink: 0;
   }
-  /* Maroon bold heading — bigger font */
   .wi-heading {
-    font-size: 22px;
+    font-size: 15px;
     font-weight: 800;
     color: #7f1d1d;
-    margin-bottom: 8px;
+    margin-bottom: 5px;
     line-height: 1.35;
     letter-spacing: -0.2px;
   }
   .wi-body {
-    font-size: 15px;
+    font-size: 13px;
     font-weight: 500;
     color: #374151;
-    line-height: 1.75;
+    line-height: 1.65;
+    margin-bottom: 10px;
   }
   .wi-body strong { color: #15803d; font-weight: 700; }
+
+  /* ── CROP TOPICS LIST ────────────────────────── */
+  .cs-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px 14px;
+    padding-top: 8px;
+    border-top: 1px solid rgba(22,163,74,0.1);
+  }
+  .cs-item {
+    display: flex; align-items: center; gap: 5px;
+    cursor: default; user-select: none; padding: 2px 0;
+  }
+  .cs-label { font-size: 12.5px; font-weight: 500; color: #374151; }
 
   /* ── MESSAGE BUBBLES ─────────────────────────── */
   .mrow { display: flex; align-items: flex-end; gap: 7px; }
@@ -3584,39 +4212,6 @@ const CSS = `
   .send:disabled { opacity: 0.32; cursor: not-allowed; }
   .inp-foot { margin-top: 4px; text-align: center; font-size: 9.5px; color: #9ca3af; }
 
-  /* ── CROPS STRIP — inside chat card, always visible ────── */
-  .crops-strip {
-    flex-shrink: 0;
-    border-top: 1px solid rgba(22,163,74,0.1);
-    background: rgba(248,255,248,0.7);
-    padding: 10px 16px 8px;
-  }
-  .cs-title {
-    font-size: 13px;
-    font-weight: 700;
-    color: #374151;
-    margin-bottom: 8px;
-    line-height: 1.5;
-  }
-  .cs-list {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 4px 16px;
-  }
-  .cs-item {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    cursor: default;
-    user-select: none;
-    padding: 2px 0;
-  }
-  .cs-label {
-    font-size: 13px;
-    font-weight: 500;
-    color: #374151;
-  }
-
   /* ── SCROLLBAR ───────────────────────────────── */
   ::-webkit-scrollbar { width: 4px; }
   ::-webkit-scrollbar-track { background: transparent; }
@@ -3636,7 +4231,6 @@ const CSS = `
     .ban-body { padding: 11px 14px; }
     .ban-logo { width: 44px; height: 44px; }
     .ban-h1 { font-size: 13.5px; }
-    .ban-pills { display: none; }
     .content-row { padding: 8px 10px 10px; }
     .banner-wrap { padding: 10px 10px 0; }
   }
